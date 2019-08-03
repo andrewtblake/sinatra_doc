@@ -40,3 +40,5 @@ end
 require_relative "sinatra_doc/version"
 require_relative "sinatra_doc/block"
 require_relative "sinatra_doc/endpoint"
+require_relative "sinatra_doc/endpoint_response"
+require_relative "sinatra_doc/endpoint_response_prop"
