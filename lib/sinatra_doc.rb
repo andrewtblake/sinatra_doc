@@ -30,6 +30,10 @@ module SinatraDoc
       @endpoints << endpoint
       self.last_defined_endpoint = endpoint
     end
+
+    def tags
+      endpoints.collect(&:tags).flatten.sort
+    end
   end
 end
 
