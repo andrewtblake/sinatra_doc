@@ -1,10 +1,9 @@
 module SinatraDoc
   class Endpoint
-    attr_reader :method, :path, :url
+    attr_accessor :method, :path
 
-    def initialize(method, path)
-      @method, @path = method, path
-      @description = nil
+    def initialize
+      @method, @path, @description = nil
       SinatraDoc.add_endpoint(self)
     end
 

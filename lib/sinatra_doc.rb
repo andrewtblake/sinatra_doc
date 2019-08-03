@@ -3,6 +3,8 @@ require "sorbet-runtime"
 
 module SinatraDoc
   class << self
+    attr_accessor :last_defined_endpoint
+
     def all_endpoints
       endpoints = Sinatra::Application.routes.map do |method, method_endpoints|
         method_endpoints.map{|path| { method: method.to_sym, path: path[0].to_s } }
@@ -26,6 +28,7 @@ module SinatraDoc
     def add_endpoint(endpoint)
       endpoints
       @endpoints << endpoint
+      self.last_defined_endpoint = endpoint
     end
   end
 end
