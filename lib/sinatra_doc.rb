@@ -45,6 +45,17 @@ module SinatraDoc
       model_classes.map{|klass| ModelProxy.new(klass) }
     end
 
+    def response_templates
+      @response_templates ||= {}
+    end
+
+    def response_template(name, code, &block)
+      response_templates
+      response = Endpoint::Response.new(code)
+      response.instance_eval(&block) if block_given?
+      @response_templates[name.to_sym] = response
+    end
+
     def tags
       endpoints.collect(&:tags).flatten.sort
     end

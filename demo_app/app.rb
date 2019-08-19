@@ -6,6 +6,10 @@ ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: "./db.sqli
 
 Dir["./models/**/*.rb"].each{|file| require file }
 
+SinatraDoc.response_template :not_found, 404 do
+  prop :message, :string, "A message explaining that the resource has not been found"
+end
+
 doc do
   tags [ "Misc" ]
   description "The index route of this API"
@@ -27,6 +31,7 @@ doc do
       prop :another_key, :string, "This is another key that will come back with the model"
     end
   end
+  response :not_found
 end
 get "/" do
   "Index Route"

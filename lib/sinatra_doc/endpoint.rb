@@ -19,9 +19,17 @@ module SinatraDoc
       @tags
     end
 
-    def response(code, &block)
-      response = Response.new(code)
-      response.instance_eval(&block) if block_given?
+    def response(code_or_template, &block)
+      case code_or_template
+      when Integer
+        response = Response.new(code_or_template)
+        response.instance_eval(&block) if block_given?
+      when Symbol
+        response = SinatraDoc.response_templates[code_or_template]
+        raise ArgumentError, "Response template not found" if response.nil?
+      else
+        raise ArgumentError, "Must pass either a Symbol or Integer"
+      end
       @responses << response
     end
   end
