@@ -11,7 +11,7 @@ module SinatraDoc
       attr_reader :doc_attributes
 
       def doc_ref(value = nil)
-        @doc_ref = value if value
+        @doc_ref = value.to_sym if value
         @doc_ref
       end
 
@@ -23,7 +23,7 @@ module SinatraDoc
   end
 
   class ModelProxy
-    attr_reader :klass
+    attr_reader :klass, :ref, :attributes
 
     def initialize(klass)
       @klass = klass

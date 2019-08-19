@@ -12,6 +12,14 @@ module SinatraDoc
           end
           @props << prop
         end
+
+        def model(ref, only: nil)
+          model = SinatraDoc.models.find{|x| x.ref == ref.to_sym }
+          model.attributes.each do |prop_name, meta|
+            next if only.is_a?(Array) && !only.include?(prop_name)
+            @props << Prop.new(prop_name, meta[:type], meta[:description])
+          end
+        end
       end
 
       class Prop
