@@ -3,9 +3,9 @@ module SinatraDoc
     class Response
       include PropMethods
 
-      attr_reader :code
+      attr_accessor :code
 
-      def initialize(code)
+      def initialize(code = nil)
         @code = code
         @props = []
       end

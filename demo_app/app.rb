@@ -6,14 +6,18 @@ ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: "./db.sqli
 
 Dir["./models/**/*.rb"].each{|file| require file }
 
-SinatraDoc.response_template :not_found, 404 do
+SinatraDoc.response_template :create do
+  prop :message, :string, "A message telling you what has been created"
+end
+
+SinatraDoc.response_template :not_found, code: 404 do
   prop :message, :string, "A message explaining that the resource has not been found"
 end
 
 doc do
   tags [ "Misc" ]
   description "The index route of this API"
-  response 200 do
+  response code: 200 do
     prop :standard_property, :string, "This is an example of a standard property"
     prop :object_property, :object, "This is an example of an object property" do
       prop :key_1, :integer, "Key one of the object"
@@ -30,6 +34,9 @@ doc do
       model :user, only: [ :id, :email ]
       prop :another_key, :string, "This is another key that will come back with the model"
     end
+  end
+  response :create, code: 201 do
+    prop :additional_property, :string, "An additional property on top of the template used"
   end
   response :not_found
 end

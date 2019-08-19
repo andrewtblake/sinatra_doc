@@ -49,7 +49,7 @@ module SinatraDoc
       @response_templates ||= {}
     end
 
-    def response_template(name, code, &block)
+    def response_template(name, code: nil, &block)
       response_templates
       response = Endpoint::Response.new(code)
       response.instance_eval(&block) if block_given?
