@@ -39,7 +39,12 @@ module SinatraDoc
     end
 
     def process_attributes
-      @attributes = @klass.column_names.map{|x| [ x.to_sym, { type: :string, description: nil } ] }.to_h
+      @attributes = @klass.columns.map do |column|
+        [
+          column.name.to_sym,
+          { type: SinatraDoc::SqlTypeConverter.lookup(column.sql_type_metadata.sql_type), description: nil }
+        ]
+      end.to_h
       @attributes.merge!(@klass.doc_attributes)
     end
   end
