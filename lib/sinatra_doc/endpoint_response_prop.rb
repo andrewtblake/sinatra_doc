@@ -1,3 +1,4 @@
+# typed: false
 module SinatraDoc
   class Endpoint
     class Response

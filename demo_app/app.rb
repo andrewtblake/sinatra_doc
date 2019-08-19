@@ -1,3 +1,4 @@
+# typed: false
 require "sinatra"
 require "../lib/sinatra_doc"
 
