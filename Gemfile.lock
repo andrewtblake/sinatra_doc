@@ -3,7 +3,6 @@ PATH
   specs:
     sinatra_doc (0.0.1)
       json (~> 2.0)
-      sorbet-runtime (~> 0.4)
 
 GEM
   remote: https://rubygems.org/
@@ -18,10 +17,6 @@ GEM
       rack (~> 2.0)
       rack-protection (= 2.0.5)
       tilt (~> 2.0)
-    sorbet (0.4.4394)
-      sorbet-static (= 0.4.4394)
-    sorbet-runtime (0.4.4664)
-    sorbet-static (0.4.4394-universal-darwin-14)
     tilt (2.0.9)
 
 PLATFORMS
@@ -30,7 +25,6 @@ PLATFORMS
 DEPENDENCIES
   sinatra (~> 2.0)
   sinatra_doc!
-  sorbet (~> 0.4)
 
 BUNDLED WITH
    2.0.1

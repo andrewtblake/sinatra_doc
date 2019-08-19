@@ -14,7 +14,5 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 2.4.0"
 
   s.add_dependency "json", "~> 2.0"
-  s.add_dependency "sorbet-runtime", "~> 0.4"
   s.add_development_dependency "sinatra", "~> 2.0"
-  s.add_development_dependency "sorbet", "~> 0.4"
 end

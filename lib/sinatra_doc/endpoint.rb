@@ -1,4 +1,3 @@
-# typed: true
 module SinatraDoc
   class Endpoint
     attr_accessor :method, :path

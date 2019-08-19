@@ -1,4 +1,3 @@
-# typed: true
 module Sinatra
   module Doc
     def doc(&block)

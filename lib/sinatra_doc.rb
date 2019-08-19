@@ -1,6 +1,4 @@
-# typed: true
 require "json"
-require "sorbet-runtime"
 
 module SinatraDoc
   class << self
