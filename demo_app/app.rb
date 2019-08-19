@@ -1,5 +1,8 @@
 require "sinatra"
+require "active_record"
 require "../lib/sinatra_doc"
+
+ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: "./db.sqlite")
 
 Dir["./models/**/*.rb"].each{|file| require file }
 

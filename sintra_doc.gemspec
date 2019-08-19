@@ -15,5 +15,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "activesupport", ">= 4.2"
   s.add_dependency "json", "~> 2.0"
+  s.add_development_dependency "activerecord", ">= 4.2"
   s.add_development_dependency "sinatra", "~> 2.0"
+  s.add_development_dependency "sqlite3", "~> 1.3", ">= 1.3.6"
 end
