@@ -1,12 +1,12 @@
 module Sinatra
   module Doc
     def doc(&block)
-      doc = SinatraDoc::Endpoint.new()
+      doc = SinatraDoc::Endpoint.new
       doc.instance_eval(&block)
     end
 
     def route(verb, path, options = {}, &block)
-      unless verb == "HEAD"
+      if verb != "HEAD" && !SinatraDoc.last_defined_endpoint.nil?
         SinatraDoc.last_defined_endpoint.method = verb
         SinatraDoc.last_defined_endpoint.path = path
       end
