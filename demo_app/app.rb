@@ -1,6 +1,8 @@
 require "sinatra"
 require "../lib/sinatra_doc"
 
+Dir["./models/**/*.rb"].each{|file| require file }
+
 doc do
   tags [ "Misc" ]
   description "The index route of this API"

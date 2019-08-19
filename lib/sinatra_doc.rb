@@ -1,3 +1,5 @@
+require "active_support"
+require "active_support/inflector"
 require "json"
 
 module SinatraDoc
@@ -30,6 +32,19 @@ module SinatraDoc
       self.last_defined_endpoint = endpoint
     end
 
+    def model_classes
+      @model_classes ||= []
+    end
+
+    def add_model(klass)
+      model_classes
+      @model_classes << klass
+    end
+
+    def models
+      model_classes.map{|klass| ModelProxy.new(klass) }
+    end
+
     def tags
       endpoints.collect(&:tags).flatten.sort
     end
@@ -41,3 +56,4 @@ require_relative "sinatra_doc/block"
 require_relative "sinatra_doc/endpoint"
 require_relative "sinatra_doc/endpoint_response_prop"
 require_relative "sinatra_doc/endpoint_response"
+require_relative "sinatra_doc/model"
