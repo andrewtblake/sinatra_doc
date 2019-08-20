@@ -42,7 +42,7 @@ module SinatraDoc
       @attributes = @klass.columns.map do |column|
         [
           column.name.to_sym,
-          { type: SinatraDoc::SqlTypeConverter.lookup(column.sql_type_metadata.sql_type), description: nil }
+          { type: SinatraDoc::Endpoint::PropTypes.convert(column.sql_type_metadata.sql_type), description: nil }
         ]
       end.to_h
       @attributes.merge!(@klass.doc_attributes)

@@ -46,10 +46,15 @@ module SinatraDoc
       end
 
       def validate
+        validation_type_valid
         validation_of_set_when_type_array
       end
 
       private
+
+      def validation_type_valid
+        raise ArgumentError, "Invalid prop type" unless PropTypes.values.include?(@type)
+      end
 
       def validation_of_set_when_type_array
         raise ArgumentError, "Param `of` must be defined when `type` is array" if @type == :array && @of.nil?
