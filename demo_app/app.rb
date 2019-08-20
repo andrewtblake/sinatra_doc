@@ -22,6 +22,9 @@ doc do
     prop :url_param_2, :string, "The second url param", in: :url
     prop :body_param_1, :string, "The first body param", in: :body, required: true
     prop :body_param_2, :integer, "The second body param", in: :body
+    prop :body_object_param, :object, in: :body do
+      prop :key_1, :string, "First object property"
+    end
     model :user, only: [ :first_name, :last_name, :email ], in: :body, required: true
   end
   response code: 200 do
