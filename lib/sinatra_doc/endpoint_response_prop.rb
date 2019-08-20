@@ -10,15 +10,20 @@ module SinatraDoc
                                                                          (type == :array && of == :object)
             prop.instance_eval(&block)
           end
-          @props << prop
+          push_prop(prop)
         end
 
         def model(ref, only: nil)
           model = SinatraDoc.models.find{|x| x.ref == ref.to_sym }
           model.attributes.each do |prop_name, meta|
             next if only.is_a?(Array) && !only.include?(prop_name)
-            @props << Prop.new(prop_name, meta[:type], meta[:description])
+            push_prop(Prop.new(prop_name, meta[:type], meta[:description]))
           end
+        end
+
+        def push_prop(prop)
+          @props.delete_if{|x| x.name == prop.name }
+          @props << prop
         end
       end
 
