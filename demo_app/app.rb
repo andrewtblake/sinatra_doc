@@ -17,6 +17,13 @@ end
 doc do
   tags [ "Misc" ]
   description "The index route of this API"
+  params do
+    prop :url_param_1, :string, "The first url param", in: :url
+    prop :url_param_2, :string, "The second url param", in: :url
+    prop :body_param_1, :string, "The first body param", in: :body, required: true
+    prop :body_param_2, :integer, "The second body param", in: :body
+    model :user, only: [ :first_name, :last_name, :email ], in: :body, required: true
+  end
   response code: 200 do
     prop :standard_property, :string, "This is an example of a standard property"
     prop :object_property, :object, "This is an example of an object property" do

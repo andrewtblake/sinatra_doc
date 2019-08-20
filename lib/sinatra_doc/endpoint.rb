@@ -19,6 +19,12 @@ module SinatraDoc
       @tags
     end
 
+    def params(&block)
+      @params ||= ParamCollection.new()
+      return @params unless block_given?
+      @params.instance_eval(&block)
+    end
+
     def response(template = nil, code: nil, &block)
       if template
         response = SinatraDoc.response_templates[template]
