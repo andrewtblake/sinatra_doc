@@ -63,7 +63,7 @@ module SinatraDoc
 end
 
 require_relative "sinatra_doc/version"
-require_relative "sinatra_doc/block"
+require_relative "sinatra_doc/sinatra"
 require_relative "sinatra_doc/endpoint"
 require_relative "sinatra_doc/endpoint_response_prop"
 require_relative "sinatra_doc/endpoint_response"
