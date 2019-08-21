@@ -1,6 +1,8 @@
 module SinatraDoc
   class Endpoint
     module PropMethods
+      attr_reader :props
+
       def prop(name, type, description = nil, **options, &block)
         options[:parent_class] = self.class
         prop = Prop.new(name, type, description, options)
@@ -28,7 +30,7 @@ module SinatraDoc
     class Prop
       include PropMethods
 
-      attr_reader :name, :type, :description
+      attr_reader :name, :type, :description, :required, :in
 
       def initialize(name, type, description, **options)
         @parent_class = options[:parent_class]
@@ -45,6 +47,10 @@ module SinatraDoc
       def sub_props_allowed
         return false unless @type == :object || (@type == :array && @of == :object)
         true
+      end
+
+      def adapt(adapter)
+        adapter.basic_prop(self)
       end
 
       def validate
