@@ -37,5 +37,9 @@ module SinatraDoc
       response.instance_eval(&block) if block_given?
       @responses << response
     end
+
+    def adapt(adapter)
+      adapter.endpoint(self)
+    end
   end
 end

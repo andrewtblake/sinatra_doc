@@ -2,6 +2,26 @@ module SinatraDoc
   module Adapters
     class Swagger < SinatraDoc::Adapter
       class << self
+        def endpoint(endpoint)
+          {
+            "#{endpoint.path}": {
+              "#{endpoint.method}": {
+                tags: endpoint.tags,
+                description: endpoint.description,
+                produces: [ "application/json" ],
+                parameters: endpoint.params.adapt(self),
+                responses: {}
+              }.compact
+            }
+          }
+        end
+
+        def params(params)
+          param_array = []
+          param_array << handle_body_params(params.props.select{|prop| prop.in == :body })
+          param_array
+        end
+
         def basic_prop(prop)
           {
             "#{prop.name}": {
@@ -16,7 +36,7 @@ module SinatraDoc
         def object_prop(prop)
           basic_prop(prop).deep_merge(
             "#{prop.name}": {
-              properties: handle_sub_props(prop.props)
+              properties: handle_props_array(prop.props)
             }
           )
         end
@@ -26,7 +46,7 @@ module SinatraDoc
             "#{prop.name}": {
               items: {
                 type: prop.of,
-                properties: prop.of == :object ? handle_sub_props(prop.props) : nil
+                properties: prop.of == :object ? handle_props_array(prop.props) : nil
               }.compact
             }
           )
@@ -41,7 +61,19 @@ module SinatraDoc
           map[value]
         end
 
-        def handle_sub_props(props)
+        def handle_body_params(params)
+          {
+            name: :body,
+            in: :body,
+            required: true,
+            schema: {
+              type: :object,
+              properties: handle_props_array(params)
+            }
+          }
+        end
+
+        def handle_props_array(props)
           props.reduce({}){|accumulator, prop| accumulator.merge(prop.adapt(self)) }
         end
       end
