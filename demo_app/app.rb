@@ -6,6 +6,10 @@ ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: "./db.sqli
 
 Dir["./models/**/*.rb"].each{|file| require file }
 
+SinatraDoc.host = "google.com"
+SinatraDoc.title = "Demo Application"
+SinatraDoc.description = "This is the description for the demo application"
+
 SinatraDoc.response_template :create do
   prop :message, :string, "A message telling you what has been created"
 end

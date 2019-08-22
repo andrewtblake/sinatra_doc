@@ -4,7 +4,7 @@ require "json"
 
 module SinatraDoc
   class << self
-    attr_accessor :last_defined_endpoint
+    attr_accessor :last_defined_endpoint, :host, :title, :description, :version
 
     def all_endpoints
       endpoints = Sinatra::Application.routes.map do |method, method_endpoints|
