@@ -10,7 +10,7 @@ module SinatraDoc
                 description: endpoint.description,
                 produces: [ "application/json" ],
                 parameters: endpoint.params.adapt(self),
-                responses: {}
+                responses: adapt_array(endpoint.responses)
               }.compact
             }
           }
@@ -20,6 +20,10 @@ module SinatraDoc
           param_array = []
           param_array << handle_body_params(params.props.select{|prop| prop.in == :body })
           param_array
+        end
+
+        def response(response)
+          { "#{response.code}": handle_schema_object(response.props) }
         end
 
         def basic_prop(prop)
@@ -36,7 +40,7 @@ module SinatraDoc
         def object_prop(prop)
           basic_prop(prop).deep_merge(
             "#{prop.name}": {
-              properties: handle_props_array(prop.props)
+              properties: adapt_array(prop.props)
             }
           )
         end
@@ -46,7 +50,7 @@ module SinatraDoc
             "#{prop.name}": {
               items: {
                 type: prop.of,
-                properties: prop.of == :object ? handle_props_array(prop.props) : nil
+                properties: prop.of == :object ? adapt_array(prop.props) : nil
               }.compact
             }
           )
@@ -61,6 +65,15 @@ module SinatraDoc
           map[value]
         end
 
+        def handle_schema_object(props)
+          {
+            schema: {
+              type: :object,
+              properties: adapt_array(props)
+            }
+          }
+        end
+
         def handle_body_params(params)
           {
             name: :body,
@@ -68,13 +81,13 @@ module SinatraDoc
             required: true,
             schema: {
               type: :object,
-              properties: handle_props_array(params)
+              properties: adapt_array(params)
             }
           }
         end
 
-        def handle_props_array(props)
-          props.reduce({}){|accumulator, prop| accumulator.merge(prop.adapt(self)) }
+        def adapt_array(array)
+          array.reduce({}){|accumulator, item| accumulator.merge(item.adapt(self)) }
         end
       end
     end

@@ -11,6 +11,11 @@ module SinatraDoc
         nil
       end
 
+      def response(_response)
+        warn "Adapter hasn't definded how to convert a response"
+        nil
+      end
+
       def basic_prop(_prop)
         warn "Adapter hasn't definded how to convert a basic prop"
         nil

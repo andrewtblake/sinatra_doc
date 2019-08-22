@@ -9,6 +9,10 @@ module SinatraDoc
         @code = code
         @props = []
       end
+
+      def adapt(adapter)
+        adapter.response(self)
+      end
     end
   end
 end
