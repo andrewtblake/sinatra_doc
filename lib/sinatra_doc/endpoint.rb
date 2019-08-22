@@ -25,13 +25,14 @@ module SinatraDoc
       @params.instance_eval(&block)
     end
 
-    def response(template = nil, code: nil, &block)
+    def response(template = nil, code: nil, description: nil, &block)
       if template
         response = SinatraDoc.response_templates[template]
         response.code = code unless code.nil?
+        response.description = description unless description.nil?
         raise ArgumentError, "Response template not found" if response.nil?
       else
-        response = Response.new(code)
+        response = Response.new(code, description)
       end
       raise ArgumentError, "All responses must have a code" if response.code.nil?
       response.instance_eval(&block) if block_given?

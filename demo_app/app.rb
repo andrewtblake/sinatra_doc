@@ -31,7 +31,7 @@ doc do
     end
     model :user, only: [ :first_name, :last_name, :email ], in: :body, required: true
   end
-  response code: 200 do
+  response code: 200, description: "Success Response" do
     prop :standard_property, :string, "This is an example of a standard property"
     prop :object_property, :object, "This is an example of an object property" do
       prop :key_1, :integer, "Key one of the object"

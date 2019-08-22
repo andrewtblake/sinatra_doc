@@ -38,7 +38,11 @@ module SinatraDoc
         end
 
         def response(response)
-          { "#{response.code}": handle_schema_object(response.props) }
+          {
+            "#{response.code}": {
+              description: response.description
+            }.merge(handle_schema_object(response.props))
+          }
         end
 
         def basic_prop(prop)

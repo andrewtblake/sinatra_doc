@@ -3,10 +3,11 @@ module SinatraDoc
     class Response
       include PropMethods
 
-      attr_accessor :code
+      attr_accessor :code, :description
 
-      def initialize(code = nil)
+      def initialize(code = nil, description = "")
         @code = code
+        @description = description
         @props = []
       end
 
