@@ -5,7 +5,7 @@ module SinatraDoc
 
       attr_accessor :code, :description
 
-      def initialize(code = nil, description = "")
+      def initialize(code = nil, description = nil)
         @code = code
         @description = description
         @props = []

@@ -40,7 +40,7 @@ module SinatraDoc
         def response(response)
           {
             "#{response.code}": {
-              description: response.description
+              description: response.description || ""
             }.merge(handle_schema_object(response.props))
           }
         end
