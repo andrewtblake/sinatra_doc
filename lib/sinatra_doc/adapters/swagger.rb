@@ -13,7 +13,7 @@ module SinatraDoc
             host: SinatraDoc.host,
             schemes: [ :http ],
             tags: SinatraDoc.tags.map{|tag| { name: tag } },
-            paths: adapt_array(SinatraDoc.endpoints)
+            paths: adapt_array(SinatraDoc.endpoints, deep: true)
           }
         end
 
@@ -112,11 +112,10 @@ module SinatraDoc
               required: required_props.count.positive? ? required_props : nil
             }.compact
           }
-          }
         end
 
-        def adapt_array(array)
-          array.reduce({}){|accumulator, item| accumulator.merge(item.adapt(self)) }
+        def adapt_array(array, deep: false)
+          array.reduce({}){|accumulator, item| accumulator.send(deep ? :deep_merge : :merge, item.adapt(self)) }
         end
       end
     end
