@@ -109,8 +109,9 @@ module SinatraDoc
             schema: {
               type: :object,
               properties: props,
-              required: required_props
-            }
+              required: required_props.count.positive? ? required_props : nil
+            }.compact
+          }
           }
         end
 
