@@ -57,3 +57,17 @@ end
 get "/" do
   "Index Route"
 end
+
+doc do
+  tags [ "Misc Post" ]
+  description "A post method route endpoint"
+  params do
+    prop :test, :string, in: :body
+  end
+  response code: 200 do
+    prop :message, :string
+  end
+end
+post "/" do
+  "Post Index Route"
+end
