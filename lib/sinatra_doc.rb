@@ -59,6 +59,10 @@ module SinatraDoc
     def tags
       endpoints.collect(&:tags).flatten.sort
     end
+
+    def adapt(adapter)
+      adapter.core
+    end
   end
 end
 

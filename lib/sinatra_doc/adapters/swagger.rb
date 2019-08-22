@@ -2,10 +2,25 @@ module SinatraDoc
   module Adapters
     class Swagger < SinatraDoc::Adapter
       class << self
+        def core
+          {
+            swagger: "2.0",
+            info: {
+              title: SinatraDoc.title || "",
+              description: SinatraDoc.description || "",
+              version: SinatraDoc.version || "1.0.0"
+            },
+            host: SinatraDoc.host,
+            schemes: [ :http ],
+            tags: SinatraDoc.tags.map{|tag| { name: tag } },
+            paths: adapt_array(SinatraDoc.endpoints)
+          }
+        end
+
         def endpoint(endpoint)
           {
             "#{endpoint.path}": {
-              "#{endpoint.method}": {
+              "#{endpoint.method.downcase}": {
                 tags: endpoint.tags,
                 description: endpoint.description,
                 produces: [ "application/json" ],
@@ -81,7 +96,9 @@ module SinatraDoc
             required: true,
             schema: {
               type: :object,
-              properties: adapt_array(params)
+              properties: adapt_array(params).transform_values do |prop_val|
+                prop_val.reject{|key, _value| key == :in }
+              end
             }
           }
         end
