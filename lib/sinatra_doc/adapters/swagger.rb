@@ -94,15 +94,22 @@ module SinatraDoc
         end
 
         def handle_body_params(params)
+          props = adapt_array(params).transform_values{|prop_val| prop_val.reject{|key, _value| key == :in } }
+          required_props = []
+          props.each do |prop_key, prop_value|
+            if prop_value.key?(:required) && prop_value[:required] == true
+              required_props << prop_key
+              props[prop_key] = prop_value.reject{|key, _val| key == :required }
+            end
+          end
           {
             name: :body,
             in: :body,
             required: true,
             schema: {
               type: :object,
-              properties: adapt_array(params).transform_values do |prop_val|
-                prop_val.reject{|key, _value| key == :in }
-              end
+              properties: props,
+              required: required_props
             }
           }
         end
