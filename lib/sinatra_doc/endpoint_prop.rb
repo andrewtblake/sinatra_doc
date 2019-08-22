@@ -30,7 +30,7 @@ module SinatraDoc
     class Prop
       include PropMethods
 
-      attr_reader :name, :type, :description, :required, :in
+      attr_reader :name, :type, :description, :required, :in, :of
 
       def initialize(name, type, description, **options)
         @parent_class = options[:parent_class]
@@ -50,7 +50,14 @@ module SinatraDoc
       end
 
       def adapt(adapter)
-        adapter.basic_prop(self)
+        case @type
+        when :object
+          adapter.object_prop(self)
+        when :array
+          adapter.array_prop(self)
+        else
+          adapter.basic_prop(self)
+        end
       end
 
       def validate
