@@ -15,9 +15,19 @@ module SinatraDoc
 
       def model(ref, only: nil, **options)
         model = SinatraDoc.models.find{|x| x.ref == ref.to_sym }
+        raise ArgumentError, "No model found with that ref" if model.nil?
         model.attributes.each do |prop_name, meta|
           next if only.is_a?(Array) && !only.include?(prop_name)
           prop(prop_name, meta[:type], meta[:description], options)
+        end
+      end
+
+      def prop_template(name, only: nil)
+        template = SinatraDoc.prop_templates.find{|x| x.name == name }
+        raise ArgumentError, "No prop template found with that name" if template.nil?
+        template.props.each do |prop|
+          next if only.is_a?(Array) && !only.include?(prop.name)
+          push_prop(prop)
         end
       end
 
@@ -82,6 +92,17 @@ module SinatraDoc
 
       def validation_of_valid
         raise ArgumentError, "Param `of` must be a valid prop type" unless PropTypes.values.include?(@of)
+      end
+    end
+
+    class PropTemplate
+      include PropMethods
+
+      attr_reader :name
+
+      def initialize(name)
+        @name = name
+        @props = []
       end
     end
   end

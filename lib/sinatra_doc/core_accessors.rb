@@ -30,6 +30,10 @@ module SinatraDoc
       model_classes.map{|klass| ModelProxy.new(klass) }
     end
 
+    def prop_templates
+      @prop_templates ||= []
+    end
+
     def response_templates
       @response_templates ||= {}
     end

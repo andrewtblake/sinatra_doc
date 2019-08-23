@@ -12,6 +12,10 @@ SinatraDoc.configure do
   self.description = "This is the description for the demo application"
   register_tag("Misc")
   register_tag("Misc Post", description: "A random tag")
+  prop_template :pagination do
+    prop :page, :integer, "The page number of results you would like to see"
+    prop :size, :integer, "The number of results that should be returned for each page"
+  end
   response_template :create do
     prop :message, :string, "A message telling you what has been created"
   end
@@ -24,6 +28,7 @@ doc do
   tags [ "Misc" ]
   description "The index route of this API"
   params in: :url do
+    prop_template :pagination
     prop :url_param_1, :string, "The first url param", required: true
     prop :url_param_2, :string, "The second url param"
   end
@@ -57,6 +62,9 @@ end
 doc do
   tags [ "Misc Post" ]
   description "A post method route endpoint"
+  params in: :url do
+    prop_template :pagination, only: [ :page ]
+  end
   params in: :body do
     prop :body_param_1, :string, "The first body param", required: true
     prop :body_param_2, :integer, "The second body param"

@@ -21,7 +21,14 @@ module SinatraDoc
       response.instance_eval(&block) if block_given?
       @response_templates[name.to_sym] = response
     end
-    
+
+    def prop_template(name, &block)
+      prop_templates
+      template = Endpoint::PropTemplate.new(name)
+      template.instance_eval(&block) if block_given?
+      @prop_templates << template
+    end
+
     def register_tag(name, description: nil)
       tags
       @tags << { name: name, description: description }
