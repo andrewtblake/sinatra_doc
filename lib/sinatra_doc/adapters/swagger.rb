@@ -33,6 +33,7 @@ module SinatraDoc
 
         def params(params)
           param_array = []
+          param_array.concat(handle_url_params(params.props.select{|prop| prop.in == :url }))
           param_array << handle_body_params(params.props.select{|prop| prop.in == :body })
           param_array
         end
@@ -80,7 +81,7 @@ module SinatraDoc
         # ----------------------------------------------------------------------
 
         def convert_prop_in(value)
-          map = { url: "path", body: "body" }
+          map = { url: "query", body: "body" }
           map[value]
         end
 
@@ -91,6 +92,12 @@ module SinatraDoc
               properties: adapt_array(props)
             }
           }
+        end
+
+        def handle_url_params(params)
+          params.map do |param|
+            move_prop_name_inside(param.adapt(self))
+          end
         end
 
         def handle_body_params(params)
@@ -116,6 +123,10 @@ module SinatraDoc
 
         def adapt_array(array, deep: false)
           array.reduce({}){|accumulator, item| accumulator.send(deep ? :deep_merge : :merge, item.adapt(self)) }
+        end
+
+        def move_prop_name_inside(adapted_prop)
+          adapted_prop.map{|k, v| { name: k }.merge(v) }[0]
         end
       end
     end

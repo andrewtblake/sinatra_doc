@@ -22,7 +22,7 @@ doc do
   tags [ "Misc" ]
   description "The index route of this API"
   params do
-    prop :url_param_1, :string, "The first url param", in: :url
+    prop :url_param_1, :string, "The first url param", required: true, in: :url
     prop :url_param_2, :string, "The second url param", in: :url
     prop :body_param_1, :string, "The first body param", in: :body, required: true
     prop :body_param_2, :integer, "The second body param", in: :body
