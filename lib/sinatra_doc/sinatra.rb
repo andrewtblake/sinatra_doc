@@ -9,6 +9,7 @@ module Sinatra
       if verb != "HEAD" && !SinatraDoc.last_defined_endpoint.nil?
         SinatraDoc.last_defined_endpoint.method = verb
         SinatraDoc.last_defined_endpoint.path = path
+        SinatraDoc.last_defined_endpoint.validate
       end
       super verb, path, options, &block
     end

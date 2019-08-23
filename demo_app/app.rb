@@ -27,14 +27,6 @@ doc do
     prop :url_param_1, :string, "The first url param", required: true
     prop :url_param_2, :string, "The second url param"
   end
-  params in: :body do
-    prop :body_param_1, :string, "The first body param", required: true
-    prop :body_param_2, :integer, "The second body param"
-    prop :body_object_param, :object do
-      prop :key_1, :string, "First object property"
-    end
-    model :user, only: [ :first_name, :last_name, :email ], required: true
-  end
   response code: 200, description: "Success Response" do
     prop :standard_property, :string, "This is an example of a standard property"
     prop :object_property, :object, "This is an example of an object property" do
@@ -65,6 +57,14 @@ end
 doc do
   tags [ "Misc Post" ]
   description "A post method route endpoint"
+  params in: :body do
+    prop :body_param_1, :string, "The first body param", required: true
+    prop :body_param_2, :integer, "The second body param"
+    prop :body_object_param, :object do
+      prop :key_1, :string, "First object property"
+    end
+    model :user, only: [ :first_name, :last_name, :email ], required: true
+  end
   params in: :body do
     prop :test, :string
   end

@@ -9,6 +9,10 @@ module SinatraDoc
       SinatraDoc.add_endpoint(self)
     end
 
+    def validate
+      validation_body_params
+    end
+
     def description(value = nil)
       @description = value if value
       @description
@@ -35,7 +39,8 @@ module SinatraDoc
       end
     end
 
-    def body_params
+    def body_params(auto_initialize: true)
+      return @body_params unless auto_initialize
       @body_params ||= ParamCollection.new(:body)
     end
 
@@ -59,6 +64,13 @@ module SinatraDoc
 
     def adapt(adapter)
       adapter.endpoint(self)
+    end
+
+    private
+
+    def validation_body_params
+      return unless [ :GET, :DELETE ].include?(@method.upcase.to_sym) && !body_params(auto_initialize: false).nil?
+      raise ArgumentError, "Body params not supported for given http method"
     end
   end
 end

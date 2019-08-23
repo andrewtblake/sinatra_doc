@@ -25,7 +25,7 @@ module SinatraDoc
                 description: endpoint.description,
                 produces: [ "application/json" ],
                 parameters: [].concat(endpoint.url_params.adapt(self))
-                              .concat([ endpoint.body_params.adapt(self) ]),
+                              .concat(endpoint.body_params(auto_initialize: false).nil? ? [] : [ endpoint.body_params.adapt(self) ]),
                 responses: adapt_array(endpoint.responses)
               }.compact
             }
