@@ -4,7 +4,13 @@ module SinatraDoc
 
     def all_endpoints
       endpoints = Sinatra::Application.routes.map do |method, method_endpoints|
-        method_endpoints.map{|path| { method: method.to_sym, path: path[0].to_s } }
+        method_endpoints.map do |path|
+          {
+            method: method.to_sym,
+            path: path[0].to_s,
+            params: path[0].to_s.scan(/:[\w]+/).map{|x| x[1..-1] }
+          }
+        end
       end
       endpoints.flatten!
       endpoints.sort_by!{|x| [ x[:path], x[:method]] }

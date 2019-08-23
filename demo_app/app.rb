@@ -83,3 +83,11 @@ end
 post "/" do
   "Post Index Route"
 end
+
+doc do
+  tags [ "Misc" ]
+  description "Another request but with path params"
+end
+get "/users/:user_id/companies/:company_id" do |user_id, company_id|
+  "Another Endpoint"
+end
