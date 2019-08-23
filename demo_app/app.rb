@@ -9,11 +9,11 @@ Dir["./models/**/*.rb"].each{|file| require file }
 SinatraDoc.host = "google.com"
 SinatraDoc.title = "Demo Application"
 SinatraDoc.description = "This is the description for the demo application"
-
+SinatraDoc.register_tag("Misc")
+SinatraDoc.register_tag("Misc Post", description: "A random tag")
 SinatraDoc.response_template :create do
   prop :message, :string, "A message telling you what has been created"
 end
-
 SinatraDoc.response_template :not_found, code: 404 do
   prop :message, :string, "A message explaining that the resource has not been found"
 end

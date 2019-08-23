@@ -56,8 +56,13 @@ module SinatraDoc
       @response_templates[name.to_sym] = response
     end
 
+    def register_tag(name, description: nil)
+      tags
+      @tags << { name: name, description: description }
+    end
+
     def tags
-      endpoints.collect(&:tags).flatten.sort
+      @tags ||= []
     end
 
     def adapt(adapter)

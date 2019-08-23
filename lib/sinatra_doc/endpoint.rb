@@ -15,7 +15,12 @@ module SinatraDoc
     end
 
     def tags(value = nil)
-      @tags = value if value
+      if value
+        raise ArgumentError, "Tags must be an array" unless value.is_a?(Array)
+        registered_tag_names = SinatraDoc.tags.collect{|x| x[:name] }
+        raise ArgumentError, "All tags must be registered" unless value.all?{|x| registered_tag_names.include?(x) }
+        @tags = value
+      end
       @tags
     end
 
