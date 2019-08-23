@@ -24,18 +24,37 @@ module SinatraDoc
                 tags: endpoint.tags,
                 description: endpoint.description,
                 produces: [ "application/json" ],
-                parameters: endpoint.params.adapt(self),
+                parameters: [].concat(endpoint.url_params.adapt(self))
+                              .concat([ endpoint.body_params.adapt(self) ]),
                 responses: adapt_array(endpoint.responses)
               }.compact
             }
           }
         end
 
-        def params(params)
-          param_array = []
-          param_array.concat(handle_url_params(params.props.select{|prop| prop.in == :url }))
-          param_array << handle_body_params(params.props.select{|prop| prop.in == :body })
-          param_array
+        def url_params(params)
+          params.props.map{|param| move_prop_name_inside(param.adapt(self)).merge(in: :query) }
+        end
+
+        def body_params(params)
+          props = adapt_array(params.props)
+          required_props = []
+          props.each do |prop_key, prop_value|
+            if prop_value.key?(:required) && prop_value[:required] == true
+              required_props << prop_key
+              props[prop_key] = prop_value.reject{|key, _val| key == :required }
+            end
+          end
+          {
+            name: :body,
+            in: :body,
+            required: true,
+            schema: {
+              type: :object,
+              properties: props,
+              required: required_props.count.positive? ? required_props : nil
+            }.compact
+          }
         end
 
         def response(response)
@@ -51,7 +70,6 @@ module SinatraDoc
             "#{prop.name}": {
               type: prop.type,
               description: prop.description,
-              in: convert_prop_in(prop.in),
               required: prop.required ? true : nil
             }.compact
           }
@@ -91,33 +109,6 @@ module SinatraDoc
               type: :object,
               properties: adapt_array(props)
             }
-          }
-        end
-
-        def handle_url_params(params)
-          params.map do |param|
-            move_prop_name_inside(param.adapt(self))
-          end
-        end
-
-        def handle_body_params(params)
-          props = adapt_array(params).transform_values{|prop_val| prop_val.reject{|key, _value| key == :in } }
-          required_props = []
-          props.each do |prop_key, prop_value|
-            if prop_value.key?(:required) && prop_value[:required] == true
-              required_props << prop_key
-              props[prop_key] = prop_value.reject{|key, _val| key == :required }
-            end
-          end
-          {
-            name: :body,
-            in: :body,
-            required: true,
-            schema: {
-              type: :object,
-              properties: props,
-              required: required_props.count.positive? ? required_props : nil
-            }.compact
           }
         end
 

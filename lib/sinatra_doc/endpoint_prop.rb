@@ -30,7 +30,7 @@ module SinatraDoc
     class Prop
       include PropMethods
 
-      attr_reader :name, :type, :description, :required, :in, :of
+      attr_reader :name, :type, :description, :required, :of
 
       def initialize(name, type, description, **options)
         @parent_class = options[:parent_class]
@@ -39,7 +39,6 @@ module SinatraDoc
         @description = description
         @required = options[:required] || false
         @of = options[:of]&.to_sym
-        @in = options[:in]&.to_sym
         @props = []
         validate
       end
@@ -65,9 +64,6 @@ module SinatraDoc
         validation_of_set_when_type_array
         validation_of_not_set_when_type_no_array
         validation_of_valid unless @of.nil?
-        validation_in_only_top_level_params
-        validation_in_set if @parent_class == ParamCollection
-        validation_in_values if @parent_class == ParamCollection
       end
 
       private
@@ -86,20 +82,6 @@ module SinatraDoc
 
       def validation_of_valid
         raise ArgumentError, "Param `of` must be a valid prop type" unless PropTypes.values.include?(@of)
-      end
-
-      def validation_in_only_top_level_params
-        raise ArgumentError, "Param `in` can only be set on top level endpoint param props" if !@in.nil? && @parent_class != ParamCollection
-      end
-
-      def validation_in_set
-        raise ArgumentError, "Param `in` must be set on top level endpoint param props" if @in.nil?
-      end
-
-      def validation_in_values
-        values = [ :url, :body ]
-        return if values.include?(@in)
-        raise ArgumentError, "Param `in` must be one of the following values: #{values.join(", ")}"
       end
     end
   end

@@ -23,15 +23,17 @@ end
 doc do
   tags [ "Misc" ]
   description "The index route of this API"
-  params do
-    prop :url_param_1, :string, "The first url param", required: true, in: :url
-    prop :url_param_2, :string, "The second url param", in: :url
-    prop :body_param_1, :string, "The first body param", in: :body, required: true
-    prop :body_param_2, :integer, "The second body param", in: :body
-    prop :body_object_param, :object, in: :body do
+  params in: :url do
+    prop :url_param_1, :string, "The first url param", required: true
+    prop :url_param_2, :string, "The second url param"
+  end
+  params in: :body do
+    prop :body_param_1, :string, "The first body param", required: true
+    prop :body_param_2, :integer, "The second body param"
+    prop :body_object_param, :object do
       prop :key_1, :string, "First object property"
     end
-    model :user, only: [ :first_name, :last_name, :email ], in: :body, required: true
+    model :user, only: [ :first_name, :last_name, :email ], required: true
   end
   response code: 200, description: "Success Response" do
     prop :standard_property, :string, "This is an example of a standard property"
@@ -63,8 +65,8 @@ end
 doc do
   tags [ "Misc Post" ]
   description "A post method route endpoint"
-  params do
-    prop :test, :string, in: :body
+  params in: :body do
+    prop :test, :string
   end
   response code: 200 do
     prop :message, :string

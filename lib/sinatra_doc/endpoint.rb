@@ -24,10 +24,23 @@ module SinatraDoc
       @tags
     end
 
-    def params(&block)
-      @params ||= ParamCollection.new()
-      return @params unless block_given?
-      @params.instance_eval(&block)
+    def params(**options, &block)
+      case options[:in]
+      when :body
+        body_params
+        @body_params.instance_eval(&block) if block_given?
+      else
+        url_params
+        @url_params.instance_eval(&block) if block_given?
+      end
+    end
+
+    def body_params
+      @body_params ||= ParamCollection.new(:body)
+    end
+
+    def url_params
+      @url_params ||= ParamCollection.new
     end
 
     def response(template = nil, code: nil, description: nil, &block)

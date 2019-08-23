@@ -6,8 +6,13 @@ module SinatraDoc
         nil
       end
 
-      def params(_params)
-        warn "Adapter hasn't definded how to convert params"
+      def url_params(_params)
+        warn "Adapter hasn't definded how to convert url params"
+        nil
+      end
+
+      def body_params(_params)
+        warn "Adapter hasn't definded how to convert body params"
         nil
       end
 
