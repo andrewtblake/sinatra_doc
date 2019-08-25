@@ -74,7 +74,7 @@ doc do
     model :user, only: [ :first_name, :last_name, :email ], required: true
   end
   params in: :body do
-    prop :test, :string
+    prop :test, :string, format: "date"
   end
   response code: 200 do
     prop :message, :string

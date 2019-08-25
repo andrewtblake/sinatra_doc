@@ -44,11 +44,12 @@ module SinatraDoc
     class Prop
       include PropMethods
 
-      attr_reader :name, :type, :description, :required, :of
+      attr_reader :name, :type, :format, :description, :required, :of
 
       def initialize(name, type, description = nil, **options)
         @name = name
         @type = type.to_sym
+        @format = options[:format]&.to_sym
         @description = description
         @required = options[:required] || false
         @of = options[:of]&.to_sym

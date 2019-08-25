@@ -74,6 +74,7 @@ module SinatraDoc
           {
             "#{prop.name}": {
               type: prop.type,
+              format: prop.format,
               description: prop.description,
               required: prop.required ? true : nil
             }.compact
