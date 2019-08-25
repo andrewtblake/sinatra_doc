@@ -46,7 +46,7 @@ doc do
       prop :key_1, :integer, "Key one of the object"
     end
     prop :model_array_property, :array, of: :object do
-      model :user, only: [ :id, :email ]
+      model :user, only: [ :id, :email ], methods: [ :string_method, :object_method ]
       prop :another_key, :string, "This is another key that will come back with the model"
     end
   end

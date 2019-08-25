@@ -4,7 +4,6 @@ module SinatraDoc
       attr_reader :props
 
       def prop(name, type, description = nil, **options, &block)
-        options[:parent_class] = self.class
         prop = Prop.new(name, type, description, options)
         if block_given?
           raise ArgumentError, "Block given but not being used" unless prop.sub_props_allowed
@@ -13,12 +12,17 @@ module SinatraDoc
         push_prop(prop)
       end
 
-      def model(ref, only: nil, **options)
+      def model(ref, only: nil, methods: nil, **options)
         model = SinatraDoc.models.find{|x| x.ref == ref.to_sym }
         raise ArgumentError, "No model found with that ref" if model.nil?
         model.attributes.each do |prop_name, meta|
           next if only.is_a?(Array) && !only.include?(prop_name)
           prop(prop_name, meta[:type], meta[:description], options)
+        end
+        return unless methods.is_a?(Array)
+        model.methods.each do |method_name, prop|
+          next unless methods.include?(method_name)
+          push_prop(prop)
         end
       end
 
@@ -42,8 +46,7 @@ module SinatraDoc
 
       attr_reader :name, :type, :description, :required, :of
 
-      def initialize(name, type, description, **options)
-        @parent_class = options[:parent_class]
+      def initialize(name, type, description = nil, **options)
         @name = name
         @type = type.to_sym
         @description = description
