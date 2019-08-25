@@ -15,7 +15,7 @@ module SinatraDoc
         @doc_ref
       end
 
-      def doc_attribute(name, type: nil, description: nil)
+      def doc_attribute(name, type, description = nil)
         @doc_attributes ||= {}
         @doc_attributes[name.to_sym] = { type: type, description: description }
       end
