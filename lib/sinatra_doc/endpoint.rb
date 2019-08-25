@@ -1,6 +1,6 @@
 module SinatraDoc
   class Endpoint
-    attr_accessor :method, :path
+    attr_accessor :method
     attr_reader :path, :responses
 
     def initialize
