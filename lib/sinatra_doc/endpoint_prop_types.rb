@@ -2,7 +2,8 @@ module SinatraDoc
   class Endpoint
     module PropTypes
       MAP = {
-        integer: [ "integer", "number", "int", "int32", "int64" ],
+        integer: [ "integer", "int", "int32", "int64" ],
+        number: [ "number", "float", "double" ],
         string: [ "string", "str", "text", "txt", "varchar" ],
         boolean: [ "boolean", "bool" ],
         object: [ "object" ],
