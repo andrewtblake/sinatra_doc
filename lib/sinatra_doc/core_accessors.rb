@@ -8,7 +8,7 @@ module SinatraDoc
           {
             method: method.to_sym,
             path: path[0].to_s,
-            params: path[0].to_s.scan(/:[\w]+/).map{|x| x[1..-1] }
+            params: path_params(path[0].to_s)
           }
         end
       end
@@ -22,6 +22,10 @@ module SinatraDoc
         [ :GET, :POST, :PUT, :PATCH, :DELETE ].include?(endpoint[:method]) && \
           endpoint[:path] != "*"
       end
+    end
+
+    def path_params(path)
+      path.scan(/:[\w]+/).map{|x| x[1..-1] }
     end
 
     def endpoints

@@ -1,8 +1,18 @@
 module SinatraDoc
   class Adapter
     class << self
+      def core
+        warn "Adapter hasn't definded how to start conversion"
+        nil
+      end
+
       def endpoint(_endpoint)
         warn "Adapter hasn't definded how to convert an endpoint"
+        nil
+      end
+
+      def path_params(_params)
+        warn "Adapter hasn't definded how to convert path params"
         nil
       end
 

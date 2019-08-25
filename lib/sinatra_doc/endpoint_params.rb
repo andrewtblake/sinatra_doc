@@ -4,7 +4,7 @@ module SinatraDoc
       include PropMethods
 
       def self.allowed_in_values
-        [ :url, :body ]
+        [ :path, :url, :body ]
       end
 
       attr_reader :in
@@ -17,6 +17,8 @@ module SinatraDoc
 
       def adapt(adapter)
         case @in
+        when :path
+          adapter.path_params(self)
         when :url
           adapter.url_params(self)
         when :body

@@ -24,12 +24,17 @@ module SinatraDoc
                 tags: endpoint.tags,
                 description: endpoint.description,
                 produces: [ "application/json" ],
-                parameters: [].concat(endpoint.url_params.adapt(self))
+                parameters: [].concat(endpoint.path_params.adapt(self))
+                              .concat(endpoint.url_params.adapt(self))
                               .concat(endpoint.body_params(auto_initialize: false).nil? ? [] : [ endpoint.body_params.adapt(self) ]),
                 responses: adapt_array(endpoint.responses)
               }.compact
             }
           }
+        end
+
+        def path_params(params)
+          params.props.map{|param| move_prop_name_inside(param.adapt(self)).merge(in: :path, required: true) }
         end
 
         def url_params(params)

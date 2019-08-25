@@ -1,15 +1,27 @@
 module SinatraDoc
   class Endpoint
     attr_accessor :method, :path
-    attr_reader :responses
+    attr_reader :path, :responses
 
     def initialize
-      @method, @path, @description = nil, nil, nil
+      @method, @path, @available_path_params, @description = nil, nil, nil, nil
       @tags, @responses = [], []
       SinatraDoc.add_endpoint(self)
     end
 
+    def path=(value)
+      raise ArgumentError, "Path must be string" unless value.is_a?(String)
+      @path = value
+      @available_path_params = SinatraDoc.path_params(@path)
+    end
+
+    def available_path_params
+      @available_path_params ||= []
+    end
+
     def validate
+      validation_only_defined_path_props
+      validation_all_path_props_defined
       validation_body_params
     end
 
@@ -30,6 +42,9 @@ module SinatraDoc
 
     def params(**options, &block)
       case options[:in]
+      when :path
+        path_params
+        @path_params.instance_eval(&block) if block_given?
       when :body
         body_params
         @body_params.instance_eval(&block) if block_given?
@@ -39,13 +54,17 @@ module SinatraDoc
       end
     end
 
-    def body_params(auto_initialize: true)
-      return @body_params unless auto_initialize
-      @body_params ||= ParamCollection.new(:body)
+    def path_params
+      @path_params ||= ParamCollection.new(:path)
     end
 
     def url_params
       @url_params ||= ParamCollection.new
+    end
+
+    def body_params(auto_initialize: true)
+      return @body_params unless auto_initialize
+      @body_params ||= ParamCollection.new(:body)
     end
 
     def response(template = nil, code: nil, description: nil, &block)
@@ -71,6 +90,17 @@ module SinatraDoc
     def validation_body_params
       return unless [ :GET, :DELETE ].include?(@method.upcase.to_sym) && !body_params(auto_initialize: false).nil?
       raise ArgumentError, "Body params not supported for given http method"
+    end
+
+    def validation_only_defined_path_props
+      return if path_params.props.all?{|param| available_path_params.include?(param.name.to_s) }
+      raise ArgumentError, "All path params must be defined in the route block"
+    end
+
+    def validation_all_path_props_defined
+      defined_path_props = path_params.props.collect{|x| x.name.to_s }
+      return if available_path_params.all?{|param| defined_path_props.include?(param) }
+      raise ArgumentError, "All defined path props must be documented"
     end
   end
 end

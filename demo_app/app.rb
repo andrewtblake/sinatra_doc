@@ -7,7 +7,7 @@ ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: "./db.sqli
 Dir["./models/**/*.rb"].each{|file| require file }
 
 SinatraDoc.configure do
-  self.host = "google.com"
+  self.host = "localhost:9292"
   self.title = "Demo Application"
   self.description = "This is the description for the demo application"
   register_tag("Misc")
@@ -87,7 +87,14 @@ end
 doc do
   tags [ "Misc" ]
   description "Another request but with path params"
+  params in: :path do
+    prop :user_id, :integer, "The id of the user you wish to interact with"
+    prop :company_id, :integer, "The id of the company you wish to interact with"
+  end
+  response code: 200 do
+    prop :message, :string
+  end
 end
-get "/users/:user_id/companies/:company_id" do |user_id, company_id|
-  "Another Endpoint"
+get "/users/:user_id/companies/:company_id" do
+  JSON.generate(message: "Another Endpoint")
 end
