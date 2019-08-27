@@ -2,6 +2,7 @@ module DB
   class User < ActiveRecord::Base
     include SinatraDoc::Model
 
+    doc_attribute :id, :integer, "The user's ID"
     doc_attribute :first_name, :string, "The user's first name"
     doc_attribute :email, :string, "The user's email"
     doc_method :string_method, :string, "A method that returns a string"
