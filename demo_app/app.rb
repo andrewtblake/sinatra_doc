@@ -88,7 +88,7 @@ doc do
   tags [ "Misc" ]
   description "Another request but with path params"
   params in: :path do
-    prop :user_id, :integer, "The id of the user you wish to interact with"
+    model :user, only: [ :id ], rename_props: { id: :user_id }
     prop :company_id, :integer, "The id of the company you wish to interact with"
   end
   response code: 200 do

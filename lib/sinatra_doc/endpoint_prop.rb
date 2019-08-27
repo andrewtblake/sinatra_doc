@@ -12,19 +12,21 @@ module SinatraDoc
         push_prop(prop)
       end
 
-      def model(ref, only: nil, methods: nil, required_props: nil)
+      def model(ref, only: nil, methods: nil, required_props: nil, rename_props: nil)
         model = SinatraDoc.models.find{|x| x.ref == ref.to_sym }
         raise ArgumentError, "No model found with that ref" if model.nil?
         model.attributes.each do |prop_name, prop|
           next if only.is_a?(Array) && !only.include?(prop_name)
           dup_prop = prop.dup
           dup_prop.update_required(true) if required_props.is_a?(Array) && required_props.include?(prop_name)
+          dup_prop.update_name(rename_props[prop_name]) if rename_props.is_a?(Hash) && rename_props.key?(prop_name)
           push_prop(dup_prop)
         end
         model.methods.each do |method_name, prop|
           next if !methods.is_a?(Array) || !methods.include?(method_name)
           dup_prop = prop.dup
           dup_prop.update_required(true) if required_props.is_a?(Array) && required_props.include?(method_name)
+          dup_prop.update_name(rename_props[prop_name]) if rename_props.is_a?(Hash) && rename_props.key?(method_name)
           push_prop(dup_prop)
         end
       end
@@ -63,6 +65,12 @@ module SinatraDoc
       def sub_props_allowed
         return false unless @type == :object || (@type == :array && @of == :object)
         true
+      end
+
+      def update_name(value)
+        raise ArgumentError, "Prop `name` must be a string or symbol" unless [ String, Symbol ].include?(value.class)
+        @name = value
+        validate
       end
 
       def update_required(value)
