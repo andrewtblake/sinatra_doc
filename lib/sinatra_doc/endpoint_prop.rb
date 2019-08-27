@@ -12,18 +12,20 @@ module SinatraDoc
         push_prop(prop)
       end
 
-      def model(ref, only: nil, methods: nil, **options)
+      def model(ref, only: nil, methods: nil, required_props: nil)
         model = SinatraDoc.models.find{|x| x.ref == ref.to_sym }
         raise ArgumentError, "No model found with that ref" if model.nil?
-        model.attributes.each do |prop_name, meta|
+        model.attributes.each do |prop_name, prop|
           next if only.is_a?(Array) && !only.include?(prop_name)
-          attr_options = options.merge(format: meta[:format])
-          prop(prop_name, meta[:type], meta[:description], attr_options)
+          dup_prop = prop.dup
+          dup_prop.update_required(true) if required_props.is_a?(Array) && required_props.include?(prop_name)
+          push_prop(dup_prop)
         end
-        return unless methods.is_a?(Array)
         model.methods.each do |method_name, prop|
-          next unless methods.include?(method_name)
-          push_prop(prop)
+          next if !methods.is_a?(Array) || !methods.include?(method_name)
+          dup_prop = prop.dup
+          dup_prop.update_required(true) if required_props.is_a?(Array) && required_props.include?(method_name)
+          push_prop(dup_prop)
         end
       end
 
@@ -61,6 +63,12 @@ module SinatraDoc
       def sub_props_allowed
         return false unless @type == :object || (@type == :array && @of == :object)
         true
+      end
+
+      def update_required(value)
+        raise ArgumentError, "Prop `required` must be a boolean" unless [ TrueClass, FalseClass ].include?(value.class)
+        @required = value
+        validate
       end
 
       def adapt(adapter)

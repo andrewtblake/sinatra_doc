@@ -71,7 +71,7 @@ doc do
     prop :body_object_param, :object do
       prop :key_1, :string, "First object property"
     end
-    model :user, only: [ :first_name, :last_name, :email ], required: true
+    model :user, only: [ :first_name, :last_name, :email ], methods: [ :string_method ], required_props: [ :first_name, :last_name, :email, :string_methods ]
   end
   params in: :body do
     prop :test, :string, format: "date"
@@ -94,6 +94,7 @@ doc do
   response code: 200 do
     prop :message, :string
     prop :string_with_format, :string, format: "date-time"
+    model :user, only: [ :telephone ]
   end
 end
 get "/users/:user_id/companies/:company_id" do

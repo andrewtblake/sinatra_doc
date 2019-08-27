@@ -15,9 +15,14 @@ module SinatraDoc
         @doc_ref
       end
 
-      def doc_attribute(name, type, description = nil)
+      def doc_attribute(name, type, description = nil, **options, &block)
         @doc_attributes ||= {}
-        @doc_attributes[name.to_sym] = { type: type, description: description }
+        prop = Endpoint::Prop.new(name, type, description, options)
+        if block_given?
+          raise ArgumentError, "Block given but not being used" unless prop.sub_props_allowed
+          prop.instance_eval(&block)
+        end
+        @doc_attributes[name.to_sym] = prop
       end
 
       def doc_method(name, type, description = nil, **options, &block)
@@ -56,11 +61,11 @@ module SinatraDoc
       @attributes = @klass.columns.map do |column|
         [
           column.name.to_sym,
-          {
-            type: SinatraDoc::Endpoint::PropTypes.convert_type(column.sql_type_metadata.sql_type),
-            format: SinatraDoc::Endpoint::PropTypes.get_format_from_type(column.sql_type_metadata.sql_type),
-            description: nil
-          }
+          Endpoint::Prop.new(
+            column.name.to_sym,
+            SinatraDoc::Endpoint::PropTypes.convert_type(column.sql_type_metadata.sql_type),
+            format: SinatraDoc::Endpoint::PropTypes.get_format_from_type(column.sql_type_metadata.sql_type)
+          )
         ]
       end.to_h
       @attributes.merge!(@klass.doc_attributes)
