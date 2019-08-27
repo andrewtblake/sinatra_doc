@@ -93,6 +93,7 @@ doc do
   end
   response code: 200 do
     prop :message, :string
+    prop :string_with_format, :string, format: "date-time"
   end
 end
 get "/users/:user_id/companies/:company_id" do

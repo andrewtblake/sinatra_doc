@@ -76,6 +76,7 @@ module SinatraDoc
 
       def validate
         validation_type_valid
+        validation_format_valid unless @format.nil?
         validation_of_set_when_type_array
         validation_of_not_set_when_type_no_array
         validation_of_valid unless @of.nil?
@@ -85,6 +86,10 @@ module SinatraDoc
 
       def validation_type_valid
         raise ArgumentError, "Invalid prop type" unless PropTypes.values.include?(@type)
+      end
+
+      def validation_format_valid
+        raise ArgumentError, "Invalid prop format" unless PropTypes::FORMATS_MAP[@type].include?(@format.to_s)
       end
 
       def validation_of_set_when_type_array
