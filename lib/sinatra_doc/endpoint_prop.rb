@@ -17,7 +17,8 @@ module SinatraDoc
         raise ArgumentError, "No model found with that ref" if model.nil?
         model.attributes.each do |prop_name, meta|
           next if only.is_a?(Array) && !only.include?(prop_name)
-          prop(prop_name, meta[:type], meta[:description], options)
+          attr_options = options.merge(format: meta[:format])
+          prop(prop_name, meta[:type], meta[:description], attr_options)
         end
         return unless methods.is_a?(Array)
         model.methods.each do |method_name, prop|
