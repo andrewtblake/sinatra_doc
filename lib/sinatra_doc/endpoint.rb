@@ -70,9 +70,10 @@ module SinatraDoc
     def response(template = nil, code: nil, description: nil, &block)
       if template
         response = SinatraDoc.response_templates[template]
+        raise ArgumentError, "Response template not found" if response.nil?
+        response = response.full_clone
         response.code = code unless code.nil?
         response.description = description unless description.nil?
-        raise ArgumentError, "Response template not found" if response.nil?
       else
         response = Response.new(code, description)
       end

@@ -44,6 +44,12 @@ module SinatraDoc
         @props.delete_if{|x| x.name == prop.name }
         @props << prop
       end
+
+      def full_clone
+        cloned = self.clone
+        cloned.instance_eval{ @props = @props.map(&:full_clone) }
+        cloned
+      end
     end
 
     class Prop
