@@ -10,6 +10,7 @@ module Sinatra
         SinatraDoc.last_defined_endpoint.method = verb
         SinatraDoc.last_defined_endpoint.path = path
         SinatraDoc.last_defined_endpoint.validate
+        SinatraDoc.last_defined_endpoint = nil
       end
       super verb, path, options, &block
     end
