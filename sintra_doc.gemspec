@@ -9,6 +9,7 @@ Gem::Specification.new do |s|
   s.authors     = [ "rradar" ]
   s.email       = "development@rradar.com"
   s.files       = Dir["lib/**/*.rb"]
+  s.require_path = "lib"
   s.homepage    = "http://rradar.com"
   s.license     = "MIT"
   s.required_ruby_version = ">= 2.4.0"
