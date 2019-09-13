@@ -13,7 +13,9 @@ module SinatraDoc
             host: SinatraDoc.host,
             schemes: [ :http ],
             tags: SinatraDoc.tags.map(&:compact),
-            paths: adapt_array(SinatraDoc.endpoints, deep: true)
+            paths: adapt_array(SinatraDoc.endpoints, deep: true),
+            securityDefinitions: { JWT: { description: "", type: "apiKey", name: "Authorization", in: "header" } },
+            security: [ { "JWT": [] } ]
           }
         end
 
