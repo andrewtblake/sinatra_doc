@@ -8,15 +8,17 @@ module SinatraDoc
     end
 
     class_methods do
-      attr_reader :doc_attributes, :doc_methods
-
       def doc_ref(value = nil)
         @doc_ref = value.to_sym if value
         @doc_ref
       end
 
-      def doc_attribute(name, type, description = nil, **options, &block)
+      def doc_attributes
         @doc_attributes ||= {}
+      end
+
+      def doc_attribute(name, type, description = nil, **options, &block)
+        doc_attributes
         prop = Endpoint::Prop.new(name, type, description, options)
         if block_given?
           raise ArgumentError, "Block given but not being used" unless prop.sub_props_allowed
@@ -25,8 +27,12 @@ module SinatraDoc
         @doc_attributes[name.to_sym] = prop
       end
 
-      def doc_method(name, type, description = nil, **options, &block)
+      def doc_methods
         @doc_methods ||= {}
+      end
+
+      def doc_method(name, type, description = nil, **options, &block)
+        doc_methods
         prop = Endpoint::Prop.new(name, type, description, options)
         if block_given?
           raise ArgumentError, "Block given but not being used" unless prop.sub_props_allowed
