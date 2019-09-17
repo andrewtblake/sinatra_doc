@@ -1,15 +1,17 @@
 module Sinatra
   module Doc
-    def doc(&block)
+    def doc(path: nil, &block)
       doc = SinatraDoc::Endpoint.new
-      doc.instance_eval(&block)
+      doc.path = path unless path.nil?
+      doc.instance_eval(&block) if block_given?
     end
 
     def route(verb, path, options = {}, &block)
-      if verb != "HEAD" && !SinatraDoc.last_defined_endpoint.nil?
-        SinatraDoc.last_defined_endpoint.method = verb
-        SinatraDoc.last_defined_endpoint.path = path
-        SinatraDoc.last_defined_endpoint.validate
+      last_def = SinatraDoc.last_defined_endpoint
+      if verb != "HEAD" && !last_def.nil?
+        last_def.method = verb
+        last_def.path = path if last_def.path.nil?
+        last_def.validate
         SinatraDoc.last_defined_endpoint = nil
       end
       super verb, path, options, &block
