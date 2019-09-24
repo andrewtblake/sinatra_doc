@@ -20,8 +20,11 @@ module SinatraDoc
         end
 
         def endpoint(endpoint)
+          path = endpoint.available_path_params.each_with_object(endpoint.path) do |param, outcome|
+            outcome.gsub!(":#{param}", "{#{param}}")
+          end
           {
-            "#{endpoint.path}": {
+            "#{path}": {
               "#{endpoint.method.downcase}": {
                 tags: endpoint.tags,
                 description: endpoint.description,
