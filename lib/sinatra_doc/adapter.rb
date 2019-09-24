@@ -48,3 +48,5 @@ module SinatraDoc
     end
   end
 end
+
+require_relative "adapters/swagger"
