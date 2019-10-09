@@ -11,17 +11,17 @@ module SinatraDoc
         nil
       end
 
-      def path_params(_params)
+      def path_params(_params, _options)
         warn "Adapter hasn't definded how to convert path params"
         nil
       end
 
-      def url_params(_params)
+      def url_params(_params, _options)
         warn "Adapter hasn't definded how to convert url params"
         nil
       end
 
-      def body_params(_params)
+      def body_params(_params, _options)
         warn "Adapter hasn't definded how to convert body params"
         nil
       end

@@ -15,14 +15,14 @@ module SinatraDoc
         validation_in_values
       end
 
-      def adapt(adapter)
+      def adapt(adapter, **options)
         case @in
         when :path
-          adapter.path_params(self)
+          adapter.path_params(self, options)
         when :url
-          adapter.url_params(self)
+          adapter.url_params(self, options)
         when :body
-          adapter.body_params(self)
+          adapter.body_params(self, options)
         end
       end
 

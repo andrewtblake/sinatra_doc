@@ -4,7 +4,7 @@ module SinatraDoc
     attr_reader :path, :responses
 
     def initialize
-      @method, @path, @available_path_params, @description = nil, nil, nil, nil
+      @method, @path, @available_path_params, @description, @consumes = nil, nil, nil, nil, :json
       @tags, @responses = [], []
       SinatraDoc.add_endpoint(self)
     end
@@ -38,6 +38,23 @@ module SinatraDoc
         @tags = value
       end
       @tags
+    end
+
+    CONSUMES_MAP = {
+      json: "application/json",
+      form_data: "multipart/form-data"
+    }.freeze
+
+    def consumes(value = nil)
+      if value
+        raise ArgumentError, "Endpoints must only consume one of: #{CONSUMES_MAP.keys.join(", ")}" unless CONSUMES_MAP.keys.include?(value)
+        @consumes = value
+      end
+      @consumes
+    end
+
+    def consumes_value
+      CONSUMES_MAP[@consumes]
     end
 
     def params(**options, &block)

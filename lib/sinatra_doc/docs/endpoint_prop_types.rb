@@ -23,6 +23,9 @@ module SinatraDoc
         boolean: [
           { types: [ "boolean", "bool" ] }
         ],
+        file: [
+          { types: [ "file" ] }
+        ],
         object: [
           { types: [ "object", "obj", "jsonb", "json" ] }
         ],

@@ -28,43 +28,48 @@ module SinatraDoc
               "#{endpoint.method.downcase}": {
                 tags: endpoint.tags,
                 description: endpoint.description,
+                consumes: [ endpoint.consumes_value ],
                 produces: [ "application/json" ],
                 parameters: [].concat(endpoint.path_params.adapt(self))
                               .concat(endpoint.url_params.adapt(self))
-                              .concat(endpoint.body_params(auto_initialize: false).nil? ? [] : [ endpoint.body_params.adapt(self) ]),
+                              .concat(endpoint.body_params(auto_initialize: false).nil? ? [] : [ endpoint.body_params.adapt(self, consumes: endpoint.consumes) ].flatten),
                 responses: adapt_array(endpoint.responses)
               }.compact
             }
           }
         end
 
-        def path_params(params)
+        def path_params(params, **_options)
           params.props.map{|param| move_prop_name_inside(param.adapt(self)).merge(in: :path, required: true) }
         end
 
-        def url_params(params)
+        def url_params(params, **_options)
           params.props.map{|param| move_prop_name_inside(param.adapt(self)).merge(in: :query) }
         end
 
-        def body_params(params)
-          props = adapt_array(params.props)
-          required_props = []
-          props.each do |prop_key, prop_value|
-            if prop_value.key?(:required) && prop_value[:required] == true
-              required_props << prop_key
-              props[prop_key] = prop_value.reject{|key, _val| key == :required }
+        def body_params(params, **options)
+          if options[:consumes] == :form_data
+            params.props.map{|param| move_prop_name_inside(param.adapt(self)).merge(in: :formData) }
+          else
+            props = adapt_array(params.props)
+            required_props = []
+            props.each do |prop_key, prop_value|
+              if prop_value.key?(:required) && prop_value[:required] == true
+                required_props << prop_key
+                props[prop_key] = prop_value.reject{|key, _val| key == :required }
+              end
             end
+            {
+              name: :body,
+              in: :body,
+              required: true,
+              schema: {
+                type: :object,
+                properties: props,
+                required: required_props.count.positive? ? required_props : nil
+              }.compact
+            }
           end
-          {
-            name: :body,
-            in: :body,
-            required: true,
-            schema: {
-              type: :object,
-              properties: props,
-              required: required_props.count.positive? ? required_props : nil
-            }.compact
-          }
         end
 
         def response(response)
