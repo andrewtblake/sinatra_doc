@@ -64,6 +64,16 @@ module SinatraDoc
     end
 
     def process_attributes
+      unless @klass.connection.data_source_exists?(@klass.table_name)
+        warning = <<~WARNING
+          ==> #{"SinatraDoc Warning:".colorize(:yellow)} #{"MISSING TABLE".colorize(:light_yellow)}
+          ==> #{"SinatraDoc Warning:".colorize(:yellow)} Table `#{@klass.table_name.colorize(:light_blue)}` is missing. There may be migrations that need running.
+          ==> #{"SinatraDoc Warning:".colorize(:yellow)} Some attributes for model `#{@klass.model_name.to_s.colorize(:light_blue)}` (ref `#{@klass.doc_ref.to_s.colorize(:light_blue)}`) may not be documented.
+        WARNING
+        warn warning
+        @attributes = {}.merge(@klass.doc_attributes)
+        return
+      end
       @attributes = @klass.columns.map do |column|
         [
           column.name.to_sym,

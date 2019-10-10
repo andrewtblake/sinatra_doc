@@ -37,7 +37,7 @@ module SinatraDoc
     end
 
     def models
-      model_classes.map{|klass| ModelProxy.new(klass) }
+      @models ||= model_classes.map{|klass| ModelProxy.new(klass) }
     end
 
     def prop_templates
