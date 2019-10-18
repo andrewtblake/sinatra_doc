@@ -40,6 +40,17 @@ module SinatraDoc
         end
         @doc_methods[name.to_sym] = prop
       end
+
+      def doc_prop_templates
+        @doc_prop_templates ||= []
+      end
+
+      def doc_prop_template(name, &block)
+        doc_prop_templates
+        template = Endpoint::PropTemplate.new(name)
+        template.instance_eval(&block) if block_given?
+        @doc_prop_templates << template
+      end
     end
   end
 
@@ -54,6 +65,10 @@ module SinatraDoc
 
     def methods
       @klass.doc_methods
+    end
+
+    def prop_templates
+      @klass.doc_prop_templates
     end
 
     private

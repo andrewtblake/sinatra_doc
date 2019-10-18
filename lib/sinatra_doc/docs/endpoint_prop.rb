@@ -12,8 +12,17 @@ module SinatraDoc
         push_prop(prop)
       end
 
+      def prop_template(name, only: nil)
+        template = SinatraDoc.prop_templates.find{|x| x.name == name }
+        raise ArgumentError, "No prop template found with that name" if template.nil?
+        template.props.each do |prop|
+          next if only.is_a?(Array) && !only.include?(prop.name)
+          push_prop(prop)
+        end
+      end
+
       def model(ref, only: nil, methods: nil, required_props: nil, rename_props: nil)
-        model = SinatraDoc.models.find{|x| x.ref == ref.to_sym }
+        model = SinatraDoc.models.find{|x| x.ref.to_sym == ref.to_sym }
         raise ArgumentError, "No model found with that ref" if model.nil?
         model.attributes.each do |prop_name, prop|
           next if only.is_a?(Array) && !only.include?(prop_name)
@@ -31,9 +40,11 @@ module SinatraDoc
         end
       end
 
-      def prop_template(name, only: nil)
-        template = SinatraDoc.prop_templates.find{|x| x.name == name }
-        raise ArgumentError, "No prop template found with that name" if template.nil?
+      def model_prop_template(ref, name, only: nil)
+        model = SinatraDoc.models.find{|x| x.ref == ref.to_sym }
+        raise ArgumentError, "No model found with that ref" if model.nil?
+        template = model.prop_templates.find{|x| x.name == name }
+        raise ArgumentError, "No prop template found with that ref and name" if template.nil?
         template.props.each do |prop|
           next if only.is_a?(Array) && !only.include?(prop.name)
           push_prop(prop)
