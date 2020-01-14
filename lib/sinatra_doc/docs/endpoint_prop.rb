@@ -21,11 +21,12 @@ module SinatraDoc
         end
       end
 
-      def model(ref, only: nil, methods: nil, required_props: nil, rename_props: nil)
+      def model(ref, only: nil, except: nil, methods: nil, required_props: nil, rename_props: nil)
         model = SinatraDoc.models.find{|x| x.ref.to_sym == ref.to_sym }
         raise ArgumentError, "No model found with that ref" if model.nil?
         model.attributes.each do |prop_name, prop|
           next if only.is_a?(Array) && !only.include?(prop_name)
+          next if except.is_a?(Array) && except.include?(prop_name)
           dup_prop = prop.dup
           dup_prop.update_required(true) if required_props.is_a?(Array) && required_props.include?(prop_name)
           dup_prop.update_name(rename_props[prop_name]) if rename_props.is_a?(Hash) && rename_props.key?(prop_name)
