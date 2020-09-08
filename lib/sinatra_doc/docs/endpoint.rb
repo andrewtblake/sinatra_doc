@@ -34,6 +34,10 @@ module SinatraDoc
       @description
     end
 
+    def tag(value)
+      tags << value
+    end
+
     def tags(value = nil)
       if value
         raise ArgumentError, "Tags must be an array" unless value.is_a?(Array)

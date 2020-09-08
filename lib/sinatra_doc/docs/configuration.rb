@@ -33,5 +33,10 @@ module SinatraDoc
       tags
       @tags << { name: name, description: description }
     end
+
+    def register_tags(tags_array)
+      raise ArgumentError, "Tags must be an array" unless tags_array.is_a?(Array)
+      tags_array.each{|tag| register_tag(tag) }
+    end
   end
 end
