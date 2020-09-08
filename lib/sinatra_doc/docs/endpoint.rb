@@ -1,12 +1,16 @@
 module SinatraDoc
   class Endpoint
-    attr_accessor :method
-    attr_reader :path, :responses
+    attr_reader :method, :path, :responses
 
     def initialize
       @method, @path, @available_path_params, @description, @consumes = nil, nil, nil, nil, :json
       @tags, @responses = [], []
       SinatraDoc.add_endpoint(self)
+    end
+
+    def method=(value)
+      raise ArgumentError, "Method must be string" unless value.is_a?(String)
+      @method = value.upcase
     end
 
     def path=(value)
