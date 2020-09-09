@@ -24,6 +24,7 @@ module SinatraDoc
     end
 
     def validate
+      return if ENV["SINATRA_DOC_SKIP_VALIDATION"] == "true"
       validation_only_defined_path_props
       validation_all_path_props_defined
       validation_body_params
