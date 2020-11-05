@@ -1,6 +1,6 @@
 module SinatraDoc
   module CoreAccessors
-    attr_accessor :last_defined_endpoint, :host, :title, :description, :version
+    attr_accessor :last_defined_endpoint, :host, :schemes, :title, :description, :version
 
     def all_endpoints
       endpoints = Sinatra::Application.routes.map do |method, method_endpoints|

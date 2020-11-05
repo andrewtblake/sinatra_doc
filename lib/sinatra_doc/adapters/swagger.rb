@@ -3,20 +3,21 @@ module SinatraDoc
     class Swagger < SinatraDoc::Adapter
       class << self
         def core
-          {
+          core = {
             swagger: "2.0",
             info: {
               title: SinatraDoc.title || "",
               description: SinatraDoc.description || "",
               version: SinatraDoc.version || "1.0.0"
             },
-            host: SinatraDoc.host,
-            schemes: [ :http ],
             tags: SinatraDoc.tags.map(&:compact),
             paths: adapt_array(SinatraDoc.endpoints, deep: true),
             securityDefinitions: { JWT: { description: "", type: "apiKey", name: "Authorization", in: "header" } },
             security: [ { "JWT": [] } ]
           }
+          core[:host] = SinatraDoc.host unless SinatraDoc.host.nil?
+          core[:schemes] = SinatraDoc.schemes unless SinatraDoc.schemes.nil?
+          core
         end
 
         def endpoint(endpoint)
