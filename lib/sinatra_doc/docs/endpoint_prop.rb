@@ -4,7 +4,7 @@ module SinatraDoc
       attr_reader :props
 
       def prop(name, type, description = nil, **options, &block)
-        prop = Prop.new(name, type, description, options)
+        prop = Prop.new(name, type, description, **options)
         if block_given?
           raise ArgumentError, "Block given but not being used" unless prop.sub_props_allowed
           prop.instance_eval(&block)
@@ -23,7 +23,26 @@ module SinatraDoc
 
       def model(ref, only: nil, except: nil, methods: nil, required_props: nil, rename_props: nil)
         model = SinatraDoc.models.find{|x| x.ref.to_sym == ref.to_sym }
+
+        ## this bit makes mutual references impossible
         raise ArgumentError, "No model found with that ref" if model.nil?
+
+        ## for example, if an :as_json template for class A returns some class B elements
+        ## but class B's template will return some elements of class A,
+        ## then one model has to be defined first, and it won't find the definition of the other
+
+        ## the solution proposed here is:
+        ## if you find the model, fine, execute the following code immediately
+        ## otherwise, save in a global hash
+        ## the model name (as the key), and an array of all the parameters (as the value) and return true
+        ## note that this might happen more than once,
+        ## so the value of the model key will be an array of arrays,
+        ## adding a new array of params every time this happens
+
+        ## then, in the Model class's doc_ref method (where the model is defined),
+        ## look to see if there have been any entries for this model,
+        ## and if so, execute this code
+
         model.attributes.each do |prop_name, prop|
           next if only.is_a?(Array) && !only.include?(prop_name)
           next if except.is_a?(Array) && except.include?(prop_name)
