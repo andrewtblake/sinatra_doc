@@ -2,3 +2,6 @@
 
 GEM_VERSION
 dev
+
+# emacs backups
+*~
