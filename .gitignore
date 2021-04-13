@@ -5,3 +5,5 @@ dev
 
 # emacs backups
 *~
+
+.ruby-version
