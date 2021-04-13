@@ -1,6 +1,7 @@
-lib = File.expand_path("../lib", __FILE__)
+lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "sinatra_doc/version"
+
 Gem::Specification.new do |s|
   s.name        = "sinatra_doc"
   s.version     = SinatraDoc::VERSION
@@ -12,11 +13,10 @@ Gem::Specification.new do |s|
   s.require_path = "lib"
   s.homepage    = "http://rradar.com"
   s.license     = "MIT"
-  s.required_ruby_version = ">= 2.4.0"
+  s.required_ruby_version = ">= 2.6.0"
 
   s.add_dependency "activesupport", ">= 4.2"
   s.add_dependency "colorize", "0.8.1"
-  s.add_dependency "json", "~> 2.0"
   s.add_development_dependency "activerecord", ">= 4.2"
   s.add_development_dependency "sinatra", "~> 2.0"
   s.add_development_dependency "sqlite3", "~> 1.3", ">= 1.3.6"
